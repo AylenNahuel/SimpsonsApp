@@ -70,59 +70,43 @@ La aplicación utiliza el stack tecnológico correcto (Hilt, Compose, Room, Pagi
 *   **Impacto**: Ejecución infinita de lógica en cada recomposición (Degradación de performance).
 *   **Solución**: Envolver en `LaunchedEffect`.
 
-### Error #8: Wildcard imports en navegación
-*   **Archivo**: `AppNavigation.kt` | **Líneas**: 9-10
-*   **Descripción**: Uso de `import androidx.navigation.*` y `import androidx.compose.*`.
-*   **Impacto**: Anti-patrón que dificulta la legibilidad y causa colisiones de nombres.
-*   **Solución**: Importar clases específicas individualmente.
-
-### Error #9: Atributo de Activity en el tag Application
+### Error #8: Atributo de Activity en el tag Application
 *   **Archivo**: `AndroidManifest.xml` | **Línea**: 13
 *   **Descripción**: `windowSoftInputMode` declarado dentro de `<application>`.
 *   **Impacto**: El sistema ignora el atributo, causando que el teclado tape la UI.
 *   **Solución**: Mover el atributo al tag `<activity>`.
 
-### Error #10: Test unitario duplicado y falso
+### Error #9: Test unitario duplicado y falso
 *   **Archivo**: `MainScreenViewModelTest.kt` | **Líneas**: 21-24
 *   **Descripción**: El test `uiState_onItemSaved_isDisplayed` es una copia idéntica del test de carga inicial.
 *   **Impacto**: Falsa sensación de cobertura de tests (Test falso positivo).
 *   **Solución**: Implementar la verificación real del estado `Success`.
 
-### Error #11: Contrato roto entre Interfaz e Implementación
+### Error #10: Contrato roto entre Interfaz e Implementación
 *   **Archivo**: `EpisodeRepository.kt` y `EpisodeRepositoryImpl.kt`
 *   **Descripción**: La interfaz usa `get_episodes()` (snake_case) y la implementación `getEpisodes()` (camelCase).
 *   **Impacto**: **Error de compilación.** El repositorio no implementa realmente su interfaz.
 *   **Solución**: Unificar a `getEpisodes()`.
 
-### Error #12: Omisión del tema personalizado en MainActivity
+### Error #11: Omisión del tema personalizado en MainActivity
 *   **Archivo**: `MainActivity.kt` | **Línea**: 17
 *   **Descripción**: Uso de `MaterialTheme` genérico en lugar de `SimpsonsAppTheme`.
 *   **Impacto**: La app ignora los colores, tipografía y soporte de Dark Mode definidos en el proyecto.
 *   **Solución**: Usar `SimpsonsAppTheme { ... }`.
 
-### Error #13: Falta de reactividad en obtención de temporadas
+### Error #12: Falta de reactividad en obtención de temporadas
 *   **Archivo**: `domain/repository/EpisodeRepository.kt` | **Línea**: 11
 *   **Descripción**: `getAvailableSeasons()` devuelve una lista estática en lugar de un `Flow`.
 *   **Impacto**: La UI no se actualiza cuando el `RemoteMediator` descarga datos nuevos.
 *   **Solución**: Cambiar el retorno a `Flow<List<Int>>`.
 
-### Error #14: R8 desactivado en build de producción
+### Error #13: R8 desactivado en build de producción
 *   **Archivo**: `build.gradle.kts` | **Línea**: 27
 *   **Descripción**: `isMinifyEnabled = false` en el build de release.
 *   **Impacto**: El APK de producción es más pesado, más lento y vulnerable a ingeniería inversa.
 *   **Solución**: Cambiar a `isMinifyEnabled = true`.
 
-### Error #15: Test de UI no compila
-*   **Archivo**: `MainScreenTest.kt` | **Línea**: 18
-*   **Descripción**: Se intenta instanciar `MainScreen(FAKE_DATA)` con argumentos de tipo incorrecto.
-*   **Impacto**: El set de tests instrumentados no compila.
-*   **Solución**: Corregir la llamada respetando la firma de la función Composable.
 
-### Error #16: Fuga de seguridad en Logs de red
-*   **Archivo**: `di/DataModule.kt` | **Líneas**: 27-29
-*   **Descripción**: `Level.BODY` de OkHttp activo incondicionalmente.
-*   **Impacto**: Se exponen datos sensibles (cuerpo de peticiones) en Logcat en el build de release.
-*   **Solución**: Condicionar el nivel de log a `BuildConfig.DEBUG`.
 
 ---
 
